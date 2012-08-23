@@ -8,10 +8,15 @@ module Redirector
       self.regex_attribute_name = attribute_name
 
       validates "#{attribute_name}_is_regex".to_sym, :inclusion => { :in => ['0', '1', true, false] }
+      validates "#{attribute_name}_is_case_sensitive".to_sym, :inclusion => { :in => ['0', '1', true, false] }
       validate :regex_attribute_is_valid_regex
 
       define_method("#{regex_attribute_name}_regex") do
-        Regexp.compile(self.send(regex_attribute_name))
+        if self.send("#{regex_attribute_name}_is_case_sensitive?")
+          Regexp.compile(self.send(regex_attribute_name))
+        else
+          Regexp.compile(self.send(regex_attribute_name), Regexp::IGNORECASE)
+        end
       end
     end
     

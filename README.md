@@ -23,6 +23,10 @@ The source defines how to match the incoming request path and the destination is
 
 Redirect rules can also have further Rack/HTTP environment (mainly HTTP headers) conditions via RequestEnvironmentRules. These define a key in the rack environment passed into the middleware and a value match you require for the redirect rule it's tied too. Similar to the redirect rules these RequestEnvironmentRules can be string matches or regex matches. A redirect rule can have as many of these environment rules as you need.
 
+When using regex matching on either a redirect rule source or a request environment rule environment value you can specify if you want the matching to be case sensitive or case insensitive with a boolean column that's on the table.
+
+See the files in `db/migrate` to see what all the columns are on these tables.
+
 ## Databases supported
 
 * MySQL

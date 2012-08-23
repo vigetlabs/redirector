@@ -4,7 +4,11 @@ class RequestEnvironmentRule < ActiveRecord::Base
   
   belongs_to :redirect_rule
 
-  attr_accessible :redirect_rule_id, :environment_key_name, :environment_value, :environment_value_is_regex
+  attr_accessible :redirect_rule_id,
+                  :environment_key_name,
+                  :environment_value,
+                  :environment_value_is_regex,
+                  :environment_value_is_case_sensitive
 
   validates :redirect_rule_id, :environment_key_name, :environment_value, :presence => true
 

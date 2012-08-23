@@ -4,3 +4,4 @@
 * Regex rules can evaluate the destination using groupings from the source.
 * Rules can have further request environment conditions to match based on HTTP Headers or Rack environment variables.
 * RequestEnvironmentRules can be exact string matches or regex matches.
+* Make regex's case sensitivity configurable

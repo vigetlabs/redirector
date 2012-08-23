@@ -4,24 +4,30 @@ class RedirectRule < ActiveRecord::Base
 
   has_many :request_environment_rules
   
-  attr_accessible :source, :source_is_regex, :destination, :active
+  attr_accessible :source,
+                  :source_is_regex,
+                  :destination,
+                  :active,
+                  :source_is_case_sensitive
   
   validates :source, :destination, :active, :presence => true
 
   def self.regex_expression
     case connection.adapter_name
     when 'PostgreSQL'
-      ':source ~* redirect_rules.source'
+      '(redirect_rules.source_is_case_sensitive = :true AND :source ~ redirect_rules.source) OR '+
+      '(redirect_rules.source_is_case_sensitive = :false AND :source ~* redirect_rules.source)'
     when /mysql/i
-      ':source REGEXP redirect_rules.source = 1'
+      '(redirect_rules.source_is_case_sensitive = :true AND :source REGEXP BINARY redirect_rules.source) OR '+
+      '(redirect_rules.source_is_case_sensitive = :false AND :source REGEXP redirect_rules.source)'
     end
   end
 
   def self.match_sql_condition
     <<-SQL
-      active = :true AND
-      ((source_is_regex = :false AND source = :source) OR 
-      (source_is_regex = :true AND #{regex_expression}))
+      redirect_rules.active = :true AND
+      ((source_is_regex = :false AND redirect_rules.source = :source) OR 
+      (source_is_regex = :true AND (#{regex_expression})))
     SQL
   end
 

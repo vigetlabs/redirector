@@ -10,7 +10,8 @@ describe RedirectRule do
   it { should allow_mass_assignment_of(:source_is_regex) }
   it { should allow_mass_assignment_of(:destination) }
   it { should allow_mass_assignment_of(:active) }
-  
+  it { should allow_mass_assignment_of(:source_is_case_sensitive) }
+
   it { should validate_presence_of(:source) }
   it { should validate_presence_of(:destination) }
   it { should validate_presence_of(:active) }
@@ -19,6 +20,11 @@ describe RedirectRule do
   it { should allow_value('1').for(:source_is_regex) }
   it { should allow_value(true).for(:source_is_regex) }
   it { should allow_value(false).for(:source_is_regex) }
+
+  it { should allow_value('0').for(:source_is_case_sensitive) }
+  it { should allow_value('1').for(:source_is_case_sensitive) }
+  it { should allow_value(true).for(:source_is_case_sensitive) }
+  it { should allow_value(false).for(:source_is_case_sensitive) }
 
   it 'should not allow an invalid regex' do
     new_rule = RedirectRule.new(:source => '[', :source_is_regex => true,
@@ -33,6 +39,30 @@ describe RedirectRule do
 
     it 'returns the rule if there is a matching rule' do
       RedirectRule.match_for('/catchy_thingy', {}).should == subject
+    end
+
+    context 'for a case sensitive regex match' do
+      let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex, :source_is_case_sensitive => true) }
+      
+      it 'returns the rule if it matches the case' do
+        RedirectRule.match_for('/new_shiny/from_company', {}).should == regex_rule
+      end
+
+      it 'returns nil if it does not match the case' do
+        RedirectRule.match_for('/new_SHINY/from_company', {}).should be_nil
+      end
+    end
+
+    context 'for a case insensitive regex match' do
+      let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex) }
+      
+      it 'returns the rule if it matches the case' do
+        RedirectRule.match_for('/new_shiny/from_company', {}).should == regex_rule
+      end
+
+      it 'returns the rule if it does not match the case' do
+        RedirectRule.match_for('/new_SHINY/from_company', {}).should == regex_rule
+      end
     end
 
     context 'with a rule with one environment condition' do
