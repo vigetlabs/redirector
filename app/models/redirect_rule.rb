@@ -27,13 +27,29 @@ class RedirectRule < ActiveRecord::Base
 
   def self.match_for(source, environment)
     where(match_sql_condition.strip, {:true => true, :false => false, :source => source}).detect do |rule|
-      rule.request_environment_rules.all? {|env_rule| env_rule.matched?(environment) }
+      rule.request_environment_rules.all? {|env_rule| env_rule.matches?(environment) }
     end
   end
 
   def self.destination_for(source, environment)
     rule = match_for(source, environment)
-    rule.destination if rule
+    rule.evaluated_destination_for(source) if rule
+  end
+
+  def evaluated_destination_for(request_path)
+    if source_is_regex? && request_path =~ source_regex
+      matches = $~
+      number_of_grouped_matches = matches.length - 1
+      final_destination = destination.dup
+
+      number_of_grouped_matches.downto(1) do |index|
+        final_destination.gsub!(/\$#{index}/, matches[index])
+      end
+
+      final_destination
+    else
+      destination
+    end
   end
 
 end

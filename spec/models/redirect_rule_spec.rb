@@ -94,11 +94,10 @@ describe RedirectRule do
   end
 
   describe '.destination_for' do
-    let!(:rule2) { FactoryGirl.create(:redirect_rule, :source => '[A-Za-z1-9_]+shiny\/[A-Za-z1-9_]+',
-      :source_is_regex => true, :destination => 'http://www.example.com/news/20') }
+    let!(:regex_rule) { FactoryGirl.create(:redirect_rule_regex) }
 
     it 'should find a regex match' do
-      RedirectRule.destination_for('/new_shiny/from_company', {}).should == 'http://www.example.com/news/20'
+      RedirectRule.destination_for('/new_shiny/from_company', {}).should == 'http://www.example.com/news/from_company'
     end
 
     it 'should find a string match' do
@@ -107,6 +106,18 @@ describe RedirectRule do
 
     it 'should return nil if there is no matching rule' do
       RedirectRule.destination_for('/someplace', {}).should be_nil
+    end
+  end
+
+  describe '#evaluated_destination_for' do
+    let(:regex_rule) { FactoryGirl.create(:redirect_rule_regex) }
+    
+    it 'returns the destination for a non regex rule' do
+      subject.evaluated_destination_for('/catchy_thingy').should == 'http://www.example.com/products/1'
+    end
+
+    it 'returns the evaluated destination for a regex rule' do
+      regex_rule.evaluated_destination_for('/new_shiny/from_company').should == 'http://www.example.com/news/from_company'
     end
   end
 end

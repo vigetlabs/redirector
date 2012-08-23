@@ -8,16 +8,12 @@ class RequestEnvironmentRule < ActiveRecord::Base
 
   validates :redirect_rule_id, :environment_key_name, :environment_value, :presence => true
 
-  def matched?(environment)
+  def matches?(environment)
     if environment_value_is_regex?
       environment[environment_key_name] && environment[environment_key_name] =~ environment_value_regex
     else
       environment[environment_key_name] == environment_value
     end
-  end
-
-  def environment_value_regex
-    Regexp.compile(environment_value)
   end
 
 end

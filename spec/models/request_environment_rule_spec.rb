@@ -25,20 +25,20 @@ describe RequestEnvironmentRule do
   end
 
   it "should know if it's matched for a non-regex value" do
-    subject.matched?({'SERVER_NAME' => 'example.com'}).should be_true
-    subject.matched?({'HTTP_HOST' => 'www.example.com'}).should be_false
-    subject.matched?({'SERVER_NAME' => 'example.ca'}).should be_false
+    subject.matches?({'SERVER_NAME' => 'example.com'}).should be_true
+    subject.matches?({'HTTP_HOST' => 'www.example.com'}).should be_false
+    subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_false
   end
 
   context 'with a regex value' do
     subject { FactoryGirl.create(:request_environment_rule_regex) }
     
     it "should know if it's matched" do
-      subject.matched?({'QUERY_STRING' => 'something=value'}).should be_true
-      subject.matched?({'QUERY_STRING' => 'q=search&something=value'}).should be_true
-      subject.matched?({'QUERY_STRING' => 'q=search&something=bogus'}).should be_false
-      subject.matched?({'QUERY_STRING' => 'q=search'}).should be_false
-      subject.matched?({'SERVER_NAME' => 'example.ca'}).should be_false
+      subject.matches?({'QUERY_STRING' => 'something=value'}).should be_true
+      subject.matches?({'QUERY_STRING' => 'q=search&something=value'}).should be_true
+      subject.matches?({'QUERY_STRING' => 'q=search&something=bogus'}).should be_false
+      subject.matches?({'QUERY_STRING' => 'q=search'}).should be_false
+      subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_false
     end
   end
 end
