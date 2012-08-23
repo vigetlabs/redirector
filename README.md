@@ -4,7 +4,7 @@ Redirector is a Rails engine that adds a piece of middleware to the top of your 
 
 ## Install
 
-1. Add this to your Gemfile
+1. Add this to your Gemfile and then `bundle install`:
   <pre><code>gem 'redirector'</code></pre>
 2. `$ rake redirector:install:migrations`
 3. `$ rake db:migrate`
@@ -13,7 +13,15 @@ Redirector is a Rails engine that adds a piece of middleware to the top of your 
 
 ## Redirect Rule definitions
 
-TODO
+Redirect rules have 3 parts:
+
+1. A Source
+2. A Destination
+3. Request environment conditions
+
+The source defines how to match the incoming request path and the destination is where to send the visitor if the match is made. A source can be a strict string equality match or it can be a regular expression that is matched. If a regular expression is used and it uses groupings, you can reference those groupings inside of the destination. For instance a regex like `/my_custom_path\/([0-9]+)/` could use that grouping in the destination like this `"/my_destination/$1"`. So, if the request path was `"/my_custom_path/10"` then the destination for that rule would be `"/my_destination/10"`.
+
+Redirect rules can also have further Rack/HTTP environment (mainly HTTP headers) conditions via RequestEnvironmentRules. These define a key in the rack environment passed into the middleware and a value match you require for the redirect rule it's tied too. Similar to the redirect rules these RequestEnvironmentRules can be string matches or regex matches. A redirect rule can have as many of these environment rules as you need.
 
 ## Databases supported
 
