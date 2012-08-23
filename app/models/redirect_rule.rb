@@ -11,7 +11,7 @@ class RedirectRule < ActiveRecord::Base
   def self.regex_expression
     case connection.adapter_name
     when 'PostgreSQL'
-      ':source ~ redirect_rules.source'
+      ':source ~* redirect_rules.source'
     when /mysql/i
       ':source REGEXP redirect_rules.source = 1'
     end
