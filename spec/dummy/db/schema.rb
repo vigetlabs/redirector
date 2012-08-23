@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120815212612) do
+ActiveRecord::Schema.define(:version => 20120823163756) do
 
   create_table "redirect_rules", :force => true do |t|
     t.string   "source",                             :null => false
@@ -24,5 +24,13 @@ ActiveRecord::Schema.define(:version => 20120815212612) do
 
   add_index "redirect_rules", ["active"], :name => "index_redirect_rules_on_active"
   add_index "redirect_rules", ["source"], :name => "index_redirect_rules_on_source"
+
+  create_table "request_environment_rules", :force => true do |t|
+    t.integer  "redirect_rule_id",     :null => false
+    t.string   "environment_key_name", :null => false
+    t.string   "environment_value",    :null => false
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
+  end
 
 end

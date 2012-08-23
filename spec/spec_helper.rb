@@ -1,11 +1,12 @@
 $LOAD_PATH.unshift(File.dirname(__FILE__))
-# Configure Rails Environment
-ENV["RAILS_ENV"] = "test"
+ENV['RAILS_ENV'] ||= 'test'
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
-require "rails/test_help"
-require 'shoulda'
+require 'rspec/rails'
+require 'rspec/autorun'
+require 'shoulda-matchers'
 require 'capybara/rails'
+require 'capybara/rspec'
 require 'database_cleaner'
 require 'factory_girl_rails'
 
@@ -13,17 +14,12 @@ Rails.backtrace_cleaner.remove_silencers!
 
 DatabaseCleaner.strategy = :truncation
 
-# Load support files
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
-
-class ActionDispatch::IntegrationTest
-  # Make the Capybara DSL available in all integration tests
-  include Capybara::DSL
-
-  # Stop ActiveRecord from wrapping tests in transactions
-  self.use_transactional_fixtures = false
-
-  teardown do
+RSpec.configure do |config|
+  config.mock_with :rspec
+  config.use_transactional_fixtures = true
+  config.infer_base_class_for_anonymous_controllers = false
+  
+  config.after(:each, :type => :request) do
     DatabaseCleaner.clean       # Truncate the database
     Capybara.reset_sessions!    # Forget the (simulated) browser state
     Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
