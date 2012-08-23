@@ -1,5 +1,27 @@
 # Redirector
 
+Redirector is a Rails engine that adds a piece of middleware to the top of your middleware stack that looks for redirect rules stored in your database and redirects you accordingly.
+
+## Install
+
+1. Add this to your Gemfile
+
+    gem 'redirector'
+
+2. Create an interface for admins to manage the redirect rules.
+
+
+## Redirect Rule definitions
+
+TODO
+
+## Databases supported
+
+* MySQL
+* PostgreSQL
+
+If you require support for another database, the only thing that needs to be added is a definition for a SQL regular expression conditional (see `app/models/redirect_rule.rb`). If you create a pull request that adds support for another database, it will most likely be merged in.
+
 ## Contributing to Redirector
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
