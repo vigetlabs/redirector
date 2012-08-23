@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
     "README.md", "redirector.gemspec", "HISTORY"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "rails", "~> 3.2.8"
+  s.add_dependency "rails", "~> 3.1"
   # s.add_dependency "jquery-rails"
 
   s.add_development_dependency "mysql2"
