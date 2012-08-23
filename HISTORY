@@ -1,1 +1,6 @@
 == 0.1.0 / 2012-08-24
+* Middleware for redirecting users based on rules stored in the database.
+* Rules can have a regex or string source to match against.
+* Regex rules can evaluate the destination using groupings from the source.
+* Rules can have further request environment conditions to match based on HTTP Headers or Rack environment variables.
+* RequestEnvironmentRules can be exact string matches or regex matches.
