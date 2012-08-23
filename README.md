@@ -8,7 +8,9 @@ Redirector is a Rails engine that adds a piece of middleware to the top of your 
 
     gem 'redirector'
 
-2. Create an interface for admins to manage the redirect rules.
+2. `$ rake redirector:install:migrations`
+3. `$ rake db:migrate`
+4. Create an interface for admins to manage the redirect rules.
 
 
 ## Redirect Rule definitions
