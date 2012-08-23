@@ -1,9 +1,12 @@
 class RedirectRule < ActiveRecord::Base
+  extend Redirector::RegexAttribute
+  regex_attribute :source
+
+  has_many :request_environment_rules
+  
   attr_accessible :source, :source_is_regex, :destination, :active
   
   validates :source, :destination, :active, :presence => true
-  validates :source_is_regex, :inclusion => { :in => ['0', '1', true, false] }
-  validate :source_is_valid_regex
 
   def self.regex_expression
     case connection.adapter_name
@@ -14,27 +17,23 @@ class RedirectRule < ActiveRecord::Base
     end
   end
 
-  def self.match_for(source)
-    sql_condition = %q{active = :true AND } +
-      %q{((source_is_regex = :false AND source = :source) OR } +
-      %Q{(source_is_regex = :true AND #{regex_expression}))}
-    where(sql_condition, {:true => true, :false => false, :source => source}).first
+  def self.match_sql_condition
+    <<-SQL
+      active = :true AND
+      ((source_is_regex = :false AND source = :source) OR 
+      (source_is_regex = :true AND #{regex_expression}))
+    SQL
   end
 
-  def self.destination_for(source)
-    rule = match_for(source)
+  def self.match_for(source, environment)
+    where(match_sql_condition.strip, {:true => true, :false => false, :source => source}).detect do |rule|
+      rule.request_environment_rules.all? {|env_rule| env_rule.matched?(environment) }
+    end
+  end
+
+  def self.destination_for(source, environment)
+    rule = match_for(source, environment)
     rule.destination if rule
   end
 
-  private
-  
-  def source_is_valid_regex
-    if source_is_regex? && source?
-      begin
-        Regexp.compile(source)
-      rescue RegexpError
-        errors.add(:source, 'is invalid regex')
-      end
-    end
-  end
 end

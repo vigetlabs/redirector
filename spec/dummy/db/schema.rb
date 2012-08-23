@@ -26,11 +26,14 @@ ActiveRecord::Schema.define(:version => 20120823163756) do
   add_index "redirect_rules", ["source"], :name => "index_redirect_rules_on_source"
 
   create_table "request_environment_rules", :force => true do |t|
-    t.integer  "redirect_rule_id",     :null => false
-    t.string   "environment_key_name", :null => false
-    t.string   "environment_value",    :null => false
-    t.datetime "created_at",           :null => false
-    t.datetime "updated_at",           :null => false
+    t.integer  "redirect_rule_id",                              :null => false
+    t.string   "environment_key_name",                          :null => false
+    t.string   "environment_value",                             :null => false
+    t.boolean  "environment_value_is_regex", :default => false, :null => false
+    t.datetime "created_at",                                    :null => false
+    t.datetime "updated_at",                                    :null => false
   end
+
+  add_index "request_environment_rules", ["redirect_rule_id"], :name => "index_request_environment_rules_on_redirect_rule_id"
 
 end

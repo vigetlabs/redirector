@@ -31,7 +31,7 @@ module Redirector
       end
       
       def matched_destination
-        @matched_destination ||= RedirectRule.destination_for(request_path)
+        @matched_destination ||= RedirectRule.destination_for(request_path, env)
       end
 
       def request_path
