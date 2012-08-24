@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(:version => 20120823163756) do
 
   add_index "redirect_rules", ["active"], :name => "index_redirect_rules_on_active"
   add_index "redirect_rules", ["source"], :name => "index_redirect_rules_on_source"
+  add_index "redirect_rules", ["source_is_case_sensitive"], :name => "index_redirect_rules_on_source_is_case_sensitive"
+  add_index "redirect_rules", ["source_is_regex"], :name => "index_redirect_rules_on_source_is_regex"
 
   create_table "request_environment_rules", :force => true do |t|
     t.integer  "redirect_rule_id",                                       :null => false

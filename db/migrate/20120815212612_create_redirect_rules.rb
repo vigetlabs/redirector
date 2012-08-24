@@ -10,5 +10,7 @@ class CreateRedirectRules < ActiveRecord::Migration
     end
     add_index :redirect_rules, :source
     add_index :redirect_rules, :active
+    add_index :redirect_rules, :source_is_regex
+    add_index :redirect_rules, :source_is_case_sensitive
   end
 end
