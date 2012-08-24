@@ -25,7 +25,29 @@ Redirect rules can also have further Rack/HTTP environment (mainly HTTP headers)
 
 When using regex matching on either a redirect rule source or a request environment rule environment value you can specify if you want the matching to be case sensitive or case insensitive with a boolean column that's on the table.
 
-See the files in `db/migrate` to see what all the columns are on these tables.
+### Schema Definition
+
+Here's the schema definition used for the two tables:
+
+    create_table "redirect_rules", :force => true do |t|
+      t.string   "source",                                      :null => false # Matched against the request path
+      t.boolean  "source_is_regex",          :default => false, :null => false # Is the source a regular expression or not
+      t.boolean  "source_is_case_sensitive", :default => false, :null => false # Is the source regex cas sensitive or not
+      t.string   "destination",                                 :null => false
+      t.boolean  "active",                   :default => false                 # Should this rule be applied or not
+      t.datetime "created_at",                                  :null => false
+      t.datetime "updated_at",                                  :null => false
+    end
+    
+    create_table "request_environment_rules", :force => true do |t|
+      t.integer  "redirect_rule_id",                                       :null => false
+      t.string   "environment_key_name",                                   :null => false # Name of the enviornment key (e.g. "QUERY_STRING", "HTTP_HOST")
+      t.string   "environment_value",                                      :null => false # What to match the value of the specified environment attribute against
+      t.boolean  "environment_value_is_regex",          :default => false, :null => false # Is the value match a regex or not
+      t.boolean  "environment_value_is_case_sensitive", :default => true,  :null => false # is the value regex case sensitive or not
+      t.datetime "created_at",                                             :null => false
+      t.datetime "updated_at",                                             :null => false
+    end
 
 ## Databases supported
 
