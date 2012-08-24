@@ -2,7 +2,7 @@ class RedirectRule < ActiveRecord::Base
   extend Redirector::RegexAttribute
   regex_attribute :source
 
-  has_many :request_environment_rules
+  has_many :request_environment_rules, :dependent => :destroy
   
   attr_accessible :source,
                   :source_is_regex,
