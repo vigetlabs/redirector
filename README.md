@@ -11,6 +11,18 @@ Redirector is a Rails engine that adds a piece of middleware to the top of your 
 4. Create an interface for admins to manage the redirect rules.
 
 
+### Config option
+
+There is one config option `include_query_in_source`. If you want your redirect rules to also match against the query string as well as the path then you need to set this to `true` (the default is `false`). You can set this inside your configuration in `config/application.rb` of your Rails application like so:
+
+    module MyApplication
+      class Application < Rails::Application
+        # ...
+        
+        config.redirector.include_query_in_source = true
+      end
+    end
+
 ## Redirect Rule definitions
 
 Redirect rules have 3 parts:

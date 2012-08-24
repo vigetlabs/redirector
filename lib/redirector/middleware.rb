@@ -35,7 +35,11 @@ module Redirector
       end
 
       def request_path
-        env['PATH_INFO']
+        if Redirector.include_query_in_source
+          env['ORIGINAL_FULLPATH']
+        else
+          env['PATH_INFO']
+        end
       end
       
       def request_host
