@@ -121,6 +121,14 @@ describe RedirectRule do
           "QUERY_STRING" => 's=bogus&something=wrong'}).should be_nil
       end
     end
+  
+    context 'with a regex rule that also matches an exact string match' do
+      let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex, :source => '[A-Za-z0-9]_thingy') }
+      
+      it 'should return the exact match' do
+        RedirectRule.match_for('/catchy_thingy', {}).should == subject
+      end
+    end
   end
 
   describe '.destination_for' do

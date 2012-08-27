@@ -32,7 +32,9 @@ class RedirectRule < ActiveRecord::Base
   end
 
   def self.match_for(source, environment)
-    where(match_sql_condition.strip, {:true => true, :false => false, :source => source}).detect do |rule|
+    match_scope = where(match_sql_condition.strip, {:true => true, :false => false, :source => source})
+    match_scope = match_scope.order('redirect_rules.source_is_regex ASC, LENGTH(redirect_rules.source) DESC')
+    match_scope.detect do |rule|
       rule.request_environment_rules.all? {|env_rule| env_rule.matches?(environment) }
     end
   end
