@@ -11,3 +11,6 @@
 * Destroy RequestEnvironmentRules when the parent RedirectRule is destroyed
 * Add some more indexes to redirect_rules table
 * Allow query strings to be part of the match on RedirectRules
+
+== 0.1.2 / 2012-08-27
+* Change ordering on match to prefer exact matches and longer matches
