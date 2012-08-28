@@ -9,7 +9,9 @@ class RedirectRule < ActiveRecord::Base
                   :destination,
                   :active,
                   :source_is_case_sensitive
-  
+
+  accepts_nested_attributes_for :request_environment_rules, :allow_destroy => true, :reject_if => :all_blank
+
   validates :source, :destination, :active, :presence => true
 
   def self.regex_expression
