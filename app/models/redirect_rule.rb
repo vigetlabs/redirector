@@ -12,7 +12,8 @@ class RedirectRule < ActiveRecord::Base
 
   accepts_nested_attributes_for :request_environment_rules, :allow_destroy => true, :reject_if => :all_blank
 
-  validates :source, :destination, :active, :presence => true
+  validates :source, :destination, :presence => true
+  validates :active, :inclusion => { :in => ['0', '1', true, false] }
 
   def self.regex_expression
     case connection.adapter_name

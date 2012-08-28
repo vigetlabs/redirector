@@ -14,7 +14,11 @@ describe RedirectRule do
 
   it { should validate_presence_of(:source) }
   it { should validate_presence_of(:destination) }
-  it { should validate_presence_of(:active) }
+
+  it { should allow_value('0').for(:active) }
+  it { should allow_value('1').for(:active) }
+  it { should allow_value(true).for(:active) }
+  it { should allow_value(false).for(:active) }
 
   it { should allow_value('0').for(:source_is_regex) }
   it { should allow_value('1').for(:source_is_regex) }
