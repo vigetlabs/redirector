@@ -11,6 +11,9 @@ describe RedirectRule do
   it { should allow_mass_assignment_of(:destination) }
   it { should allow_mass_assignment_of(:active) }
   it { should allow_mass_assignment_of(:source_is_case_sensitive) }
+  it { should allow_mass_assignment_of(:request_environment_rules_attributes) }
+
+  it { should accept_nested_attributes_for(:request_environment_rules) }
 
   it { should validate_presence_of(:source) }
   it { should validate_presence_of(:destination) }
