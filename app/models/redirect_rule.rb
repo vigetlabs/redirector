@@ -8,7 +8,8 @@ class RedirectRule < ActiveRecord::Base
                   :source_is_regex,
                   :destination,
                   :active,
-                  :source_is_case_sensitive
+                  :source_is_case_sensitive,
+                  :request_environment_rules_attributes
 
   accepts_nested_attributes_for :request_environment_rules, :allow_destroy => true, :reject_if => :all_blank
 
