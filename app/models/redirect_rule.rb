@@ -56,7 +56,7 @@ class RedirectRule < ActiveRecord::Base
       final_destination = destination.dup
 
       number_of_grouped_matches.downto(1) do |index|
-        final_destination.gsub!(/\$#{index}/, matches[index])
+        final_destination.gsub!(/\$#{index}/, matches[index].to_s)
       end
 
       final_destination
