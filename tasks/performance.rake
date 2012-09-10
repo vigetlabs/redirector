@@ -25,7 +25,7 @@ namespace :performance do
         :destination              => 'http://www.example.com/products/1'
       }
       1000.times do |i|
-        RedirectRule.create!(base_regex_attributes.merge(:source => "#{base_path}#{i}"))
+        RedirectRule.create!(base_string_attributes.merge(:source => "#{base_path}#{i}"))
       end
 
       base_real_regex_matches = "my_real_match/to/something/"
