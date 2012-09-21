@@ -5,6 +5,7 @@ describe 'Redirector middleware' do
     FactoryGirl.create(:redirect_rule, :destination => '/news/5', :source => '/my_custom_url')
     FactoryGirl.create(:redirect_rule_regex, :destination => '/news/$1', :source => '/my_custom_url/([A-Za-z0-9_]+)')
     FactoryGirl.create(:redirect_rule_regex, :destination => '/news', :source => 'categoryID=12345')
+    FactoryGirl.create(:redirect_rule, :destination => '/news/1', :source => '/example_url',:status_code => 302)
   end
   
   it 'correctly redirects the visitor for an exact match rule' do
@@ -29,4 +30,14 @@ describe 'Redirector middleware' do
     current_path.should == '/news'
     Redirector.include_query_in_source = original_option
   end
+
+  it 'should redirect with 301 as the default HTTP response code' do
+    get '/my_custom_url'
+    response.code.should == "301"
+  end
+
+  it 'should redirect with the correct HTTP response code' do
+    get '/example_url'
+    response.code.should == "302"
+  end  
 end

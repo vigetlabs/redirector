@@ -9,7 +9,8 @@ class RedirectRule < ActiveRecord::Base
                   :destination,
                   :active,
                   :source_is_case_sensitive,
-                  :request_environment_rules_attributes
+                  :request_environment_rules_attributes,
+                  :status_code
 
   accepts_nested_attributes_for :request_environment_rules, :allow_destroy => true, :reject_if => :all_blank
 
@@ -47,6 +48,11 @@ class RedirectRule < ActiveRecord::Base
   def self.destination_for(source, environment)
     rule = match_for(source, environment)
     rule.evaluated_destination_for(source) if rule
+  end
+
+  def self.status_code_for(source, environment)
+    rule = match_for(source,environment)
+    rule.status_code if rule
   end
 
   def evaluated_destination_for(request_path)
