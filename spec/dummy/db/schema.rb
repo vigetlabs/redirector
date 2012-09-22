@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120823163756) do
+ActiveRecord::Schema.define(:version => 20120922022613) do
 
   create_table "redirect_rules", :force => true do |t|
     t.string   "source",                                      :null => false
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20120823163756) do
     t.boolean  "active",                   :default => false
     t.datetime "created_at",                                  :null => false
     t.datetime "updated_at",                                  :null => false
+    t.integer  "status_code",              :default => 301
   end
 
   add_index "redirect_rules", ["active"], :name => "index_redirect_rules_on_active"

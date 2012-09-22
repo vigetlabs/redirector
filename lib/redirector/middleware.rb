@@ -47,7 +47,7 @@ module Redirector
       end
 
       def redirect_response
-        [301, {'Location' => redirect_url_string}, 
+        [status_code, {'Location' => redirect_url_string}, 
           %{You are being redirected <a href="#{redirect_url_string}">#{redirect_url_string}</a>}]
       end
 
@@ -64,6 +64,10 @@ module Redirector
       
       def redirect_url_string
         @redirect_url_string ||= redirect_uri.to_s
+      end
+
+      def status_code
+        RedirectRule.status_code_for(request_path, env) || 301
       end
     end
   end

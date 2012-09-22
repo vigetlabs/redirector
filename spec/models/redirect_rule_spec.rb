@@ -12,6 +12,7 @@ describe RedirectRule do
   it { should allow_mass_assignment_of(:active) }
   it { should allow_mass_assignment_of(:source_is_case_sensitive) }
   it { should allow_mass_assignment_of(:request_environment_rules_attributes) }
+  it { should allow_mass_assignment_of(:status_code) }
 
   it { should accept_nested_attributes_for(:request_environment_rules) }
 
@@ -163,6 +164,15 @@ describe RedirectRule do
 
     it 'returns the evaluated destination for a regex rule' do
       regex_rule.evaluated_destination_for('/new_shiny/from_company').should == 'http://www.example.com/news/from_company'
+    end
+  end
+
+  describe 'status_code' do
+    it 'should default to 301' do
+      new_rule = RedirectRule.new(:source => '/example', :source_is_regex => false,
+        :destination => 'http://www.example.com', :active => true)
+      new_rule.save
+      new_rule.status_code.should == 301
     end
   end
 end
