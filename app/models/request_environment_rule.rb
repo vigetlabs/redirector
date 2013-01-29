@@ -10,7 +10,7 @@ class RequestEnvironmentRule < ActiveRecord::Base
                   :environment_value_is_regex,
                   :environment_value_is_case_sensitive
 
-  validates :redirect_rule_id, :environment_key_name, :environment_value, :presence => true
+  validates :redirect_rule, :environment_key_name, :environment_value, :presence => true
 
   def matches?(environment)
     if environment_value_is_regex?

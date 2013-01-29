@@ -11,7 +11,7 @@ describe RequestEnvironmentRule do
   it { should allow_mass_assignment_of(:environment_value_is_regex) }
   it { should allow_mass_assignment_of(:environment_value_is_case_sensitive) }
   
-  it { should validate_presence_of(:redirect_rule_id) }
+  it { should validate_presence_of(:redirect_rule) }
   it { should validate_presence_of(:environment_key_name) }
   it { should validate_presence_of(:environment_value) }
 
