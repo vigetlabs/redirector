@@ -1,5 +1,7 @@
 # Redirector
 
+[![Code Climate](https://codeclimate.com/github/vigetlabs/redirector.png)](https://codeclimate.com/github/vigetlabs/redirector)
+
 Redirector is a Rails engine that adds a piece of middleware to the top of your middleware stack that looks for redirect rules stored in your database and redirects you accordingly.
 
 ## Install
