@@ -5,13 +5,7 @@ module Redirector
     end
 
     def call(environment)
-      if Redirector.silence_sql_logs
-        ActiveRecord::Base.logger.silence do
-          Responder.new(@application, environment).response
-        end
-      else
-        Responder.new(@application, environment).response
-      end
+      Responder.new(@application, environment).response
     end
 
     class Responder
@@ -37,7 +31,15 @@ module Redirector
       end
 
       def matched_destination
-        @matched_destination ||= RedirectRule.destination_for(request_path, env)
+        @matched_destination ||= begin
+          if Redirector.silence_sql_logs
+            ActiveRecord::Base.logger.silence do
+              RedirectRule.destination_for(request_path, env)
+            end
+          else
+            RedirectRule.destination_for(request_path, env)
+          end
+        end
       end
 
       def request_path
