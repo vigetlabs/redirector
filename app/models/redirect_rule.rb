@@ -39,6 +39,7 @@ class RedirectRule < ActiveRecord::Base
     match_scope = where(match_sql_condition.strip, {:true => true, :false => false, :source => source})
     match_scope = match_scope.order('redirect_rules.source_is_regex ASC, LENGTH(redirect_rules.source) DESC')
     match_scope = match_scope.includes(:request_environment_rules)
+    match_scope = match_scope.references(:request_environment_rules) if Rails.version.to_i == 4
     match_scope.detect do |rule|
       rule.request_environment_rules.all? {|env_rule| env_rule.matches?(environment) }
     end

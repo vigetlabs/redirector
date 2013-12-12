@@ -6,7 +6,7 @@ module Redirector
   mattr_accessor :silence_sql_logs
 
   def self.active_record_protected_attributes?
-    @active_record_protected_attributes ||= ActiveRecord::VERSION::STRING.to_f < 4.0 || !!defined?(ProtectedAttrbiutes)
+    @active_record_protected_attributes ||= Rails.version.to_i < 4 || !!defined?(ProtectedAttrbiutes)
   end
 end
 
