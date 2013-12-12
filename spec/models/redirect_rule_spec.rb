@@ -6,13 +6,6 @@ describe RedirectRule do
 
   it { should have_many(:request_environment_rules) }
 
-  it { should allow_mass_assignment_of(:source) }
-  it { should allow_mass_assignment_of(:source_is_regex) }
-  it { should allow_mass_assignment_of(:destination) }
-  it { should allow_mass_assignment_of(:active) }
-  it { should allow_mass_assignment_of(:source_is_case_sensitive) }
-  it { should allow_mass_assignment_of(:request_environment_rules_attributes) }
-
   it { should accept_nested_attributes_for(:request_environment_rules) }
 
   it { should validate_presence_of(:source) }
@@ -50,7 +43,7 @@ describe RedirectRule do
 
     context 'for a case sensitive regex match' do
       let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex, :source_is_case_sensitive => true) }
-      
+
       it 'returns the rule if it matches the case' do
         RedirectRule.match_for('/new_shiny/from_company', {}).should == regex_rule
       end
@@ -62,7 +55,7 @@ describe RedirectRule do
 
     context 'for a case insensitive regex match' do
       let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex) }
-      
+
       it 'returns the rule if it matches the case' do
         RedirectRule.match_for('/new_shiny/from_company', {}).should == regex_rule
       end
@@ -76,16 +69,16 @@ describe RedirectRule do
       before do
         FactoryGirl.create(:request_environment_rule, :redirect_rule => subject)
       end
-    
+
       it 'should find the rule if it matches' do
         RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com'}).should == subject
       end
-    
+
       it 'should not find the rule if there is no match' do
         RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.ca'}).should be_nil
       end
     end
-    
+
     context 'with a rule with multiple environment conditions' do
       before do
         FactoryGirl.create(:request_environment_rule, :redirect_rule => subject)
@@ -96,13 +89,13 @@ describe RedirectRule do
         RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
           'QUERY_STRING' => 's=bogus&something=value'}).should == subject
       end
-    
+
       it 'should not find the rule if there is no match' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com', 
+        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
           "QUERY_STRING" => 's=bogus&something=wrong'}).should be_nil
       end
     end
-    
+
     context 'with multiple rules with multiple environment conditions' do
       let!(:rule2){ FactoryGirl.create(:redirect_rule) }
       before do
@@ -124,14 +117,14 @@ describe RedirectRule do
       end
 
       it 'should not find the rule if there is no match' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com', 
+        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
           "QUERY_STRING" => 's=bogus&something=wrong'}).should be_nil
       end
     end
-  
+
     context 'with a regex rule that also matches an exact string match' do
       let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex, :source => '[A-Za-z0-9]_thingy') }
-      
+
       it 'should return the exact match' do
         RedirectRule.match_for('/catchy_thingy', {}).should == subject
       end
@@ -156,7 +149,7 @@ describe RedirectRule do
 
   describe '#evaluated_destination_for' do
     let(:regex_rule) { FactoryGirl.create(:redirect_rule_regex) }
-    
+
     it 'returns the destination for a non regex rule' do
       subject.evaluated_destination_for('/catchy_thingy').should == 'http://www.example.com/products/1'
     end
