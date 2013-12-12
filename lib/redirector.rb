@@ -3,6 +3,7 @@ module Redirector
   autoload :RegexAttribute, 'redirector/regex_attribute'
 
   mattr_accessor :include_query_in_source
+  mattr_accessor :silence_sql_logs
 
   def self.active_record_protected_attributes?
     @active_record_protected_attributes ||= ActiveRecord::VERSION::STRING.to_f < 4.0 || !!defined?(ProtectedAttrbiutes)
