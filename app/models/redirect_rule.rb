@@ -3,13 +3,13 @@ class RedirectRule < ActiveRecord::Base
   regex_attribute :source
 
   has_many :request_environment_rules, :inverse_of => :redirect_rule, :dependent => :destroy
-  
+
   attr_accessible :source,
                   :source_is_regex,
                   :destination,
                   :active,
                   :source_is_case_sensitive,
-                  :request_environment_rules_attributes
+                  :request_environment_rules_attributes if Redirector.active_record_protected_attributes?
 
   accepts_nested_attributes_for :request_environment_rules, :allow_destroy => true, :reject_if => :all_blank
 
@@ -30,7 +30,7 @@ class RedirectRule < ActiveRecord::Base
   def self.match_sql_condition
     <<-SQL
       redirect_rules.active = :true AND
-      ((source_is_regex = :false AND redirect_rules.source = :source) OR 
+      ((source_is_regex = :false AND redirect_rules.source = :source) OR
       (source_is_regex = :true AND (#{regex_expression})))
     SQL
   end
@@ -39,6 +39,7 @@ class RedirectRule < ActiveRecord::Base
     match_scope = where(match_sql_condition.strip, {:true => true, :false => false, :source => source})
     match_scope = match_scope.order('redirect_rules.source_is_regex ASC, LENGTH(redirect_rules.source) DESC')
     match_scope = match_scope.includes(:request_environment_rules)
+    match_scope = match_scope.references(:request_environment_rules) if Rails.version.to_i == 4
     match_scope.detect do |rule|
       rule.request_environment_rules.all? {|env_rule| env_rule.matches?(environment) }
     end

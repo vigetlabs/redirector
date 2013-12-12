@@ -1,14 +1,14 @@
 class RequestEnvironmentRule < ActiveRecord::Base
   extend Redirector::RegexAttribute
   regex_attribute :environment_value
-  
+
   belongs_to :redirect_rule
 
   attr_accessible :redirect_rule_id,
                   :environment_key_name,
                   :environment_value,
                   :environment_value_is_regex,
-                  :environment_value_is_case_sensitive
+                  :environment_value_is_case_sensitive if Redirector.active_record_protected_attributes?
 
   validates :redirect_rule, :environment_key_name, :environment_value, :presence => true
 

@@ -5,12 +5,6 @@ describe RequestEnvironmentRule do
 
   it { should belong_to(:redirect_rule) }
 
-  it { should allow_mass_assignment_of(:redirect_rule_id) }
-  it { should allow_mass_assignment_of(:environment_key_name) }
-  it { should allow_mass_assignment_of(:environment_value) }
-  it { should allow_mass_assignment_of(:environment_value_is_regex) }
-  it { should allow_mass_assignment_of(:environment_value_is_case_sensitive) }
-  
   it { should validate_presence_of(:redirect_rule) }
   it { should validate_presence_of(:environment_key_name) }
   it { should validate_presence_of(:environment_value) }
@@ -38,7 +32,7 @@ describe RequestEnvironmentRule do
 
   context 'with a case sensitive regex value' do
     subject { FactoryGirl.create(:request_environment_rule_regex) }
-    
+
     it "should know if it's matched" do
       subject.matches?({'QUERY_STRING' => 'something=value'}).should be_true
       subject.matches?({'QUERY_STRING' => 'q=search&something=value'}).should be_true
@@ -51,7 +45,7 @@ describe RequestEnvironmentRule do
 
   context 'with a case insensitve regex value' do
     subject { FactoryGirl.create(:request_environment_rule_regex, :environment_value_is_case_sensitive => false) }
-    
+
     it "should know if it's matched" do
       subject.matches?({'QUERY_STRING' => 'something=value'}).should be_true
       subject.matches?({'QUERY_STRING' => 'q=search&something=value'}).should be_true

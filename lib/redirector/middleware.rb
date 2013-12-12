@@ -3,11 +3,11 @@ module Redirector
     def initialize(application)
       @application = application
     end
-    
+
     def call(environment)
       Responder.new(@application, environment).response
     end
-    
+
     class Responder
       attr_reader :app, :env
 
@@ -25,13 +25,23 @@ module Redirector
       end
 
       private
-      
+
       def redirect?
         matched_destination.present?
       end
-      
+
       def matched_destination
-        @matched_destination ||= RedirectRule.destination_for(request_path, env)
+        @matched_destination ||= with_optional_silencing do
+          RedirectRule.destination_for(request_path, env)
+        end
+      end
+
+      def with_optional_silencing(&block)
+        if Redirector.silence_sql_logs
+          ActiveRecord::Base.logger.silence { yield }
+        else
+          yield
+        end
       end
 
       def request_path
@@ -41,14 +51,22 @@ module Redirector
           env['PATH_INFO']
         end
       end
-      
+
       def request_host
         env['HTTP_HOST'].split(':').first
       end
 
+      def request_port
+        @request_port ||= begin
+          if env['HTTP_HOST'].include?(':')
+            env['HTTP_HOST'].split(':').last.to_i
+          end
+        end
+      end
+
       def redirect_response
-        [301, {'Location' => redirect_url_string}, 
-          %{You are being redirected <a href="#{redirect_url_string}">#{redirect_url_string}</a>}]
+        [301, {'Location' => redirect_url_string},
+          [%{You are being redirected <a href="#{redirect_url_string}">#{redirect_url_string}</a>}]]
       end
 
       def destination_uri
@@ -59,9 +77,10 @@ module Redirector
         destination_uri.tap do |uri|
           uri.scheme ||= 'http'
           uri.host   ||= request_host
+          uri.port   ||= request_port if request_port.present?
         end
       end
-      
+
       def redirect_url_string
         @redirect_url_string ||= redirect_uri.to_s
       end

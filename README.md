@@ -13,15 +13,20 @@ Redirector is a Rails engine that adds a piece of middleware to the top of your 
 4. Create an interface for admins to manage the redirect rules.
 
 
-### Config option
+### Config options
 
-There is one config option `include_query_in_source`. If you want your redirect rules to also match against the query string as well as the path then you need to set this to `true` (the default is `false`). You can set this inside your configuration in `config/application.rb` of your Rails application like so:
+`include_query_in_source`: If you want your redirect rules to also match against the query string as well as the path then you need to set this to `true` (the default is `false`).
+
+`silence_sql_logs`: This option silences the logging of Redirector related SQL queries in your log file.
+
+You can set these inside your configuration in `config/application.rb` of your Rails application like so:
 
     module MyApplication
       class Application < Rails::Application
         # ...
-        
+
         config.redirector.include_query_in_source = true
+        config.redirector.silence_sql_logs = true
       end
     end
 
@@ -52,7 +57,7 @@ Here's the schema definition used for the two tables:
       t.datetime "created_at",                                  :null => false
       t.datetime "updated_at",                                  :null => false
     end
-    
+
     create_table "request_environment_rules", :force => true do |t|
       t.integer  "redirect_rule_id",                                       :null => false
       t.string   "environment_key_name",                                   :null => false # Name of the enviornment key (e.g. "QUERY_STRING", "HTTP_HOST")
@@ -71,7 +76,7 @@ Here's the schema definition used for the two tables:
 If you require support for another database, the only thing that needs to be added is a definition for a SQL regular expression conditional (see `app/models/redirect_rule.rb`). If you create a pull request that adds support for another database, it will most likely be merged in.
 
 ## Contributing to Redirector
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.
