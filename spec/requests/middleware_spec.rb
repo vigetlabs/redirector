@@ -6,7 +6,7 @@ describe 'Redirector middleware' do
     FactoryGirl.create(:redirect_rule_regex, :destination => '/news/$1', :source => '/my_custom_url/([A-Za-z0-9_]+)')
     FactoryGirl.create(:redirect_rule_regex, :destination => '/news', :source => 'categoryID=12345')
   end
-  
+
   it 'correctly redirects the visitor for an exact match rule' do
     visit '/my_custom_url'
     current_path.should == '/news/5'
@@ -28,5 +28,17 @@ describe 'Redirector middleware' do
     visit '/my_old_url?categoryID=12345'
     current_path.should == '/news'
     Redirector.include_query_in_source = original_option
+  end
+
+  it 'handles requests with or without a port specified' do
+    Capybara.app_host = 'http://example.com'
+
+    visit '/my_custom_url'
+    current_url.should == 'http://example.com/news/5'
+
+    Capybara.app_host = 'http://example.com:3000'
+
+    visit '/my_custom_url'
+    current_url.should == 'http://example.com:3000/news/5'
   end
 end

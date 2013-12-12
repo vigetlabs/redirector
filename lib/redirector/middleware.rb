@@ -54,6 +54,14 @@ module Redirector
         env['HTTP_HOST'].split(':').first
       end
 
+      def request_port
+        @request_port ||= begin
+          if env['HTTP_HOST'].include?(':')
+            env['HTTP_HOST'].split(':').last.to_i
+          end
+        end
+      end
+
       def redirect_response
         [301, {'Location' => redirect_url_string},
           %{You are being redirected <a href="#{redirect_url_string}">#{redirect_url_string}</a>}]
@@ -67,6 +75,7 @@ module Redirector
         destination_uri.tap do |uri|
           uri.scheme ||= 'http'
           uri.host   ||= request_host
+          uri.port   ||= request_port if request_port.present?
         end
       end
 
