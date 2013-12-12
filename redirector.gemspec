@@ -13,11 +13,11 @@ Gem::Specification.new do |s|
   s.summary     = "A Rails engine that adds a piece of middleware to the top of your middleware stack that looks for redirect rules stored in your database and redirects you accordingly."
   s.description = "A Rails engine that adds a piece of middleware to the top of your middleware stack that looks for redirect rules stored in your database and redirects you accordingly."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", 
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile",
     "README.md", "redirector.gemspec", "HISTORY"]
   s.test_files = Dir["spec/**/*"]
 
-  s.add_dependency "rails", "~> 3.1"
+  s.add_dependency "rails", ">= 3.1"
   # s.add_dependency "jquery-rails"
 
   s.add_development_dependency "mysql2"
