@@ -64,7 +64,7 @@ module Redirector
 
       def redirect_response
         [301, {'Location' => redirect_url_string},
-          %{You are being redirected <a href="#{redirect_url_string}">#{redirect_url_string}</a>}]
+          [%{You are being redirected <a href="#{redirect_url_string}">#{redirect_url_string}</a>}]]
       end
 
       def destination_uri
