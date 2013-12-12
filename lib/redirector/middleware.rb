@@ -31,14 +31,16 @@ module Redirector
       end
 
       def matched_destination
-        @matched_destination ||= begin
-          if Redirector.silence_sql_logs
-            ActiveRecord::Base.logger.silence do
-              RedirectRule.destination_for(request_path, env)
-            end
-          else
-            RedirectRule.destination_for(request_path, env)
-          end
+        @matched_destination ||= with_optional_silencing do
+          RedirectRule.destination_for(request_path, env)
+        end
+      end
+
+      def with_optional_silencing(&block)
+        if Redirector.silence_sql_logs
+          ActiveRecord::Base.logger.silence { yield }
+        else
+          yield
         end
       end
 
