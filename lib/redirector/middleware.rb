@@ -1,4 +1,6 @@
 module Redirector
+  class RuleError < StandardError; end
+
   class Middleware
     def initialize(application)
       @application = application
@@ -71,6 +73,9 @@ module Redirector
 
       def destination_uri
         URI.parse(matched_destination)
+      rescue URI::InvalidURIError
+        rule = RedirectRule.match_for(request_path, env)
+        raise Redirector::RuleError, "RedirectRule #{rule.id} generated the bad destination: #{matched_destination}"
       end
 
       def redirect_uri

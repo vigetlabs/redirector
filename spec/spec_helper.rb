@@ -10,6 +10,8 @@ require 'capybara/rspec'
 require 'database_cleaner'
 require 'factory_girl_rails'
 
+include Capybara::DSL
+
 Rails.backtrace_cleaner.remove_silencers!
 
 DatabaseCleaner.strategy = :truncation
@@ -18,7 +20,7 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.use_transactional_fixtures = true
   config.infer_base_class_for_anonymous_controllers = false
-  
+
   config.after(:each, :type => :request) do
     DatabaseCleaner.clean       # Truncate the database
     Capybara.reset_sessions!    # Forget the (simulated) browser state

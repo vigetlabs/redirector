@@ -41,4 +41,14 @@ describe 'Redirector middleware' do
     visit '/my_custom_url'
     current_url.should == 'http://example.com:3000/news/5'
   end
+
+  it 'handles invalid URIs properly' do
+    bad_rule = FactoryGirl.create(:redirect_rule_regex, :destination => 'http://www.example.com$1', :source => '^/custom(.*)$')
+
+    begin
+      visit '/custom)%e2'
+    rescue Redirector::RuleError => e
+      e.message.should == "RedirectRule #{bad_rule.id} generated the bad destination: http://www.example.com)%e2"
+    end
+  end
 end
