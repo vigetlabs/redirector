@@ -7,3 +7,5 @@ spec/dummy/tmp/
 spec/dummy/.sass-cache
 .rvmrc
 gemfiles/*gemfile.lock
+spec/dummy/config/database.yml
+
