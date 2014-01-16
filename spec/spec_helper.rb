@@ -10,8 +10,6 @@ require 'capybara/rspec'
 require 'database_cleaner'
 require 'factory_girl_rails'
 
-include Capybara::DSL
-
 Rails.backtrace_cleaner.remove_silencers!
 
 DatabaseCleaner.strategy = :truncation
