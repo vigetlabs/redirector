@@ -83,6 +83,12 @@ If you require support for another database, the only thing that needs to be add
 * Start a feature/bugfix branch.
 * Commit and push until you are happy with your contribution.
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+  * We're using [Appraisal](https://github.com/thoughtbot/appraisal) to test against different Rails versions.
+  * In order to run the tests you'll need to do the following:
+    1. `cp spec/dummy/config/database.yml.example spec/dummy/config/database.yml`
+    2. modify that `spec/dummy/config/database.yml` with your mysql configuration details
+    3. run `rake appraisal:install` (should only need to do this once)
+    4. run `rake appraisal spec`
 * Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 ## Copyright
