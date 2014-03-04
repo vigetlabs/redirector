@@ -3,6 +3,7 @@ module Redirector
   autoload :RegexAttribute, 'redirector/regex_attribute'
 
   mattr_accessor :include_query_in_source
+  mattr_accessor :preserve_query
   mattr_accessor :silence_sql_logs
 
   def self.active_record_protected_attributes?

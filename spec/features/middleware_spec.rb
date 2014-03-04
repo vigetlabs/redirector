@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Redirector middleware' do
+describe 'Redirector middleware', :type => :feature do
   before do
     FactoryGirl.create(:redirect_rule, :destination => '/news/5', :source => '/my_custom_url')
     FactoryGirl.create(:redirect_rule_regex, :destination => '/news/$1', :source => '/my_custom_url/([A-Za-z0-9_]+)')
@@ -28,6 +28,16 @@ describe 'Redirector middleware' do
     visit '/my_old_url?categoryID=12345'
     current_path.should == '/news'
     Redirector.include_query_in_source = original_option
+  end
+
+  it 'should preserve the query string if the Redirector.preserve_query is true' do
+    original_option = Redirector.preserve_query
+    Redirector.preserve_query = true
+    visit '/my_custom_url/20?categoryID=12345'
+    uri = URI.parse(current_url)
+    uri.query.should == 'categoryID=12345'
+    current_path.should == '/news/20'
+    Redirector.preserve_query = original_option
   end
 
   it 'handles requests with or without a port specified' do
