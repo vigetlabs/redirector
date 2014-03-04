@@ -70,6 +70,7 @@ GEM
     mysql2 (0.3.14)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
+    pg (0.17.1)
     polyglot (0.3.3)
     rack (1.4.5)
     rack-cache (1.2)
@@ -134,6 +135,7 @@ DEPENDENCIES
   factory_girl_rails (~> 1.7)
   jquery-rails
   mysql2
+  pg
   rails (~> 3.2)
   redirector!
   rspec-rails
