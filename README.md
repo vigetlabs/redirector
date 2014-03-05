@@ -23,6 +23,8 @@ Redirector is a Rails engine that adds a piece of middleware to the top of your 
 
 `silence_sql_logs`: This option silences the logging of Redirector related SQL queries in your log file.
 
+`preserve_query`: Pass the query string parameters through from the source to the target URL.
+
 You can set these inside your configuration in `config/application.rb` of your Rails application like so:
 
 ```ruby
