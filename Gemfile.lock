@@ -136,6 +136,7 @@ DEPENDENCIES
   jquery-rails
   mysql2
   pg
+  rake
   redirector!
   rspec-rails
   shoulda-matchers

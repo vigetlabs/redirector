@@ -4,7 +4,7 @@ development:
   reconnect: false
   database: redirector_dummy_development
   pool: 5
-  username: root
+  username: travis
   password:
 
 test:
@@ -13,5 +13,5 @@ test:
   reconnect: false
   database: redirector_dummy_test
   pool: 5
-  username: root
+  username: travis
   password:
