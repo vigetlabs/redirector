@@ -40,6 +40,14 @@ describe 'Redirector middleware', :type => :feature do
     Redirector.preserve_query = original_option
   end
 
+  it 'should stil work with silenced ActiveRecord logs' do
+    original_option = Redirector.silence_sql_logs
+    Redirector.silence_sql_logs = true
+    visit '/my_custom_url/20'
+    current_path.should == '/news/20'
+    Redirector.preserve_query = original_option
+  end
+
   it 'handles requests with or without a port specified' do
     Capybara.app_host = 'http://example.com'
 
