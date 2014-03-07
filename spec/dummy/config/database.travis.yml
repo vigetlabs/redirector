@@ -1,0 +1,26 @@
+mysql: &mysql
+  adapter: mysql2
+  username: travis
+  encoding: utf8
+  reconnect: false
+  password:
+  database: redirector_dummy_<%= Rails.env %>
+ 
+postgresql: &postgresql
+  adapter: postgresql
+  username: postgres
+  password:
+  database: redirector_dummy_<%= Rails.env %>
+  encoding: unicode
+  min_messages: warning
+ 
+defaults: &defaults
+  pool: 5
+  timeout: 5000
+  <<: *<%= ENV['DB'] || "mysql" %>
+ 
+development:
+  <<: *defaults
+ 
+test:
+  <<: *defaults
