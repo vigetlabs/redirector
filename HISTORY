@@ -22,3 +22,13 @@
 * Allow nested attributes for request environment rules on redirect rules and be set by mass assignment.
 * [BUG] Allow active to be set to false
 * [BUG] Handle a nil value for a match group correctly
+
+== 0.1.5 / 2014-01-16
+* Officially support Rails 4
+* Add `silence_sql_logs` config option
+* Handle ports on redirects properly
+* Better handle `URI::InvalidURIError` exceptions inside middleware by raising custom error
+* Minor bug fix
+
+== 1.0.0 / 2014-03-07
+* Add `preserve_query` option to preserve the query string from source to destination URL
