@@ -41,6 +41,30 @@ describe RedirectRule do
       RedirectRule.match_for('/catchy_thingy', {}).should == subject
     end
 
+    context 'for a case sensitive match' do
+      let!(:case_sensitive_rule) { FactoryGirl.create(:redirect_rule, :source_is_case_sensitive => true, :source => '/Case-Does-Matter') }
+
+      it 'returns the rule if it matches the case' do
+        RedirectRule.match_for('/Case-Does-Matter', {}).should == case_sensitive_rule
+      end
+
+      it 'returns nil if it does not match the case' do
+        RedirectRule.match_for('/case-does-matter', {}).should be_nil
+      end
+    end
+
+    context 'for a case insensitive match' do
+      let!(:case_insensitive_rule) { FactoryGirl.create(:redirect_rule, :source_is_case_sensitive => false, :source => '/Case-Does-Not-Matter') }
+
+      it 'returns the rule if it matches the case' do
+        RedirectRule.match_for('/Case-Does-Not-Matter', {}).should == case_insensitive_rule
+      end
+
+      it 'returns the rule if it does not match the case' do
+        RedirectRule.match_for('/case-does-not-matter', {}).should == case_insensitive_rule
+      end
+    end
+
     context 'for a case sensitive regex match' do
       let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex, :source_is_case_sensitive => true) }
 

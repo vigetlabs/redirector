@@ -17,20 +17,20 @@ class RedirectRule < ActiveRecord::Base
   validates :active, :inclusion => { :in => ['0', '1', true, false] }
 
   def self.regex_expression
-    case connection.adapter_name
-    when 'PostgreSQL'
-      '(redirect_rules.source_is_case_sensitive = :true AND :source ~ redirect_rules.source) OR '+
-      '(redirect_rules.source_is_case_sensitive = :false AND :source ~* redirect_rules.source)'
-    when /mysql/i
+    if connection_mysql?
       '(redirect_rules.source_is_case_sensitive = :true AND :source REGEXP BINARY redirect_rules.source) OR '+
       '(redirect_rules.source_is_case_sensitive = :false AND :source REGEXP redirect_rules.source)'
+    else
+      '(redirect_rules.source_is_case_sensitive = :true AND :source ~ redirect_rules.source) OR '+
+      '(redirect_rules.source_is_case_sensitive = :false AND :source ~* redirect_rules.source)'
     end
   end
 
   def self.match_sql_condition
     <<-SQL
       redirect_rules.active = :true AND
-      ((source_is_regex = :false AND redirect_rules.source = :source) OR
+      ((source_is_regex = :false AND source_is_case_sensitive = :false AND LOWER(redirect_rules.source) = LOWER(:source)) OR
+      (source_is_regex = :false AND source_is_case_sensitive = :true AND #{'BINARY' if connection_mysql?} redirect_rules.source = :source) OR
       (source_is_regex = :true AND (#{regex_expression})))
     SQL
   end
@@ -64,6 +64,12 @@ class RedirectRule < ActiveRecord::Base
     else
       destination
     end
+  end
+
+  private
+
+  def self.connection_mysql?
+    connection.adapter_name.downcase.include?('mysql')
   end
 
 end
