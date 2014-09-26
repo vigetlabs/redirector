@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe RequestEnvironmentRule do
-  subject { FactoryGirl.create(:request_environment_rule) }
+  subject { create(:request_environment_rule) }
 
   it { should belong_to(:redirect_rule) }
 
@@ -20,7 +20,7 @@ describe RequestEnvironmentRule do
   it { should allow_value(false).for(:environment_value_is_case_sensitive) }
 
   it 'should not allow an invalid regex' do
-    rule = FactoryGirl.build(:request_environment_rule_regex, :environment_value => '[')
+    rule = build(:request_environment_rule_regex, :environment_value => '[')
     rule.errors_on(:environment_value).should == ['is an invalid regular expression']
   end
 
@@ -31,7 +31,7 @@ describe RequestEnvironmentRule do
   end
 
   context 'with a case sensitive regex value' do
-    subject { FactoryGirl.create(:request_environment_rule_regex) }
+    subject { create(:request_environment_rule_regex) }
 
     it "should know if it's matched" do
       subject.matches?({'QUERY_STRING' => 'something=value'}).should be_true
@@ -44,7 +44,7 @@ describe RequestEnvironmentRule do
   end
 
   context 'with a case insensitve regex value' do
-    subject { FactoryGirl.create(:request_environment_rule_regex, :environment_value_is_case_sensitive => false) }
+    subject { create(:request_environment_rule_regex, :environment_value_is_case_sensitive => false) }
 
     it "should know if it's matched" do
       subject.matches?({'QUERY_STRING' => 'something=value'}).should be_true

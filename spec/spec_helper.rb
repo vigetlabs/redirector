@@ -18,6 +18,8 @@ Rails.backtrace_cleaner.remove_silencers!
 DatabaseCleaner.strategy = :truncation
 
 RSpec.configure do |config|
+  config.include FactoryGirl::Syntax::Methods
+
   config.mock_with :rspec
   config.use_transactional_fixtures = true
   config.infer_base_class_for_anonymous_controllers = false

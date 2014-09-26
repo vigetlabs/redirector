@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe RedirectRule do
-  subject { FactoryGirl.create(:redirect_rule) }
+  subject { create(:redirect_rule) }
   let!(:rule) { subject }
 
   it { should have_many(:request_environment_rules) }
@@ -42,7 +42,7 @@ describe RedirectRule do
     end
 
     context 'for a case sensitive match' do
-      let!(:case_sensitive_rule) { FactoryGirl.create(:redirect_rule, :source_is_case_sensitive => true, :source => '/Case-Does-Matter') }
+      let!(:case_sensitive_rule) { create(:redirect_rule, :source_is_case_sensitive => true, :source => '/Case-Does-Matter') }
 
       it 'returns the rule if it matches the case' do
         RedirectRule.match_for('/Case-Does-Matter', {}).should == case_sensitive_rule
@@ -54,7 +54,7 @@ describe RedirectRule do
     end
 
     context 'for a case insensitive match' do
-      let!(:case_insensitive_rule) { FactoryGirl.create(:redirect_rule, :source_is_case_sensitive => false, :source => '/Case-Does-Not-Matter') }
+      let!(:case_insensitive_rule) { create(:redirect_rule, :source_is_case_sensitive => false, :source => '/Case-Does-Not-Matter') }
 
       it 'returns the rule if it matches the case' do
         RedirectRule.match_for('/Case-Does-Not-Matter', {}).should == case_insensitive_rule
@@ -66,7 +66,7 @@ describe RedirectRule do
     end
 
     context 'for a case sensitive regex match' do
-      let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex, :source_is_case_sensitive => true) }
+      let!(:regex_rule){ create(:redirect_rule_regex, :source_is_case_sensitive => true) }
 
       it 'returns the rule if it matches the case' do
         RedirectRule.match_for('/new_shiny/from_company', {}).should == regex_rule
@@ -78,7 +78,7 @@ describe RedirectRule do
     end
 
     context 'for a case insensitive regex match' do
-      let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex) }
+      let!(:regex_rule){ create(:redirect_rule_regex) }
 
       it 'returns the rule if it matches the case' do
         RedirectRule.match_for('/new_shiny/from_company', {}).should == regex_rule
@@ -91,7 +91,7 @@ describe RedirectRule do
 
     context 'with a rule with one environment condition' do
       before do
-        FactoryGirl.create(:request_environment_rule, :redirect_rule => subject)
+        create(:request_environment_rule, :redirect_rule => subject)
       end
 
       it 'should find the rule if it matches' do
@@ -105,8 +105,8 @@ describe RedirectRule do
 
     context 'with a rule with multiple environment conditions' do
       before do
-        FactoryGirl.create(:request_environment_rule, :redirect_rule => subject)
-        FactoryGirl.create(:request_environment_rule_regex, :redirect_rule => subject)
+        create(:request_environment_rule, :redirect_rule => subject)
+        create(:request_environment_rule_regex, :redirect_rule => subject)
       end
 
       it 'should find the rule if it matches' do
@@ -121,12 +121,12 @@ describe RedirectRule do
     end
 
     context 'with multiple rules with multiple environment conditions' do
-      let!(:rule2){ FactoryGirl.create(:redirect_rule) }
+      let!(:rule2){ create(:redirect_rule) }
       before do
-        FactoryGirl.create(:request_environment_rule, :redirect_rule => subject)
-        FactoryGirl.create(:request_environment_rule_regex, :redirect_rule => subject)
-        FactoryGirl.create(:request_environment_rule, :redirect_rule => rule2)
-        FactoryGirl.create(:request_environment_rule_regex, :redirect_rule => rule2,
+        create(:request_environment_rule, :redirect_rule => subject)
+        create(:request_environment_rule_regex, :redirect_rule => subject)
+        create(:request_environment_rule, :redirect_rule => rule2)
+        create(:request_environment_rule_regex, :redirect_rule => rule2,
           :environment_value => 'another=value')
       end
 
@@ -147,7 +147,7 @@ describe RedirectRule do
     end
 
     context 'with a regex rule that also matches an exact string match' do
-      let!(:regex_rule){ FactoryGirl.create(:redirect_rule_regex, :source => '[A-Za-z0-9]_thingy') }
+      let!(:regex_rule){ create(:redirect_rule_regex, :source => '[A-Za-z0-9]_thingy') }
 
       it 'should return the exact match' do
         RedirectRule.match_for('/catchy_thingy', {}).should == subject
@@ -156,7 +156,7 @@ describe RedirectRule do
   end
 
   describe '.destination_for' do
-    let!(:regex_rule) { FactoryGirl.create(:redirect_rule_regex) }
+    let!(:regex_rule) { create(:redirect_rule_regex) }
 
     it 'should find a regex match' do
       RedirectRule.destination_for('/new_shiny/from_company', {}).should == 'http://www.example.com/news/from_company'
@@ -172,7 +172,7 @@ describe RedirectRule do
   end
 
   describe '#evaluated_destination_for' do
-    let(:regex_rule) { FactoryGirl.create(:redirect_rule_regex) }
+    let(:regex_rule) { create(:redirect_rule_regex) }
 
     it 'returns the destination for a non regex rule' do
       subject.evaluated_destination_for('/catchy_thingy').should == 'http://www.example.com/products/1'

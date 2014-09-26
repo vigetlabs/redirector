@@ -1,5 +1,5 @@
 PATH
-  remote: .
+  remote: ../
   specs:
     redirector (1.0.0)
       rails (>= 3.1)
@@ -150,6 +150,7 @@ DEPENDENCIES
   jquery-rails
   mysql2
   pg
+  rails (~> 4.1.6)
   rake
   redirector!
   rspec-rails (~> 2.14.2)

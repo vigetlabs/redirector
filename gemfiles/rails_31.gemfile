@@ -3,6 +3,6 @@
 source "http://rubygems.org"
 
 gem "jquery-rails"
-gem "rails", "~> 3.2"
+gem "rails", "~> 3.1.12"
 
-gemspec :path=>"../"
+gemspec :path => "../"

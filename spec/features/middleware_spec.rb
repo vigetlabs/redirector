@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe 'Redirector middleware', :type => :feature do
   before do
-    FactoryGirl.create(:redirect_rule, :destination => '/news/5', :source => '/my_custom_url')
-    FactoryGirl.create(:redirect_rule_regex, :destination => '/news/$1', :source => '/my_custom_url/([A-Za-z0-9_]+)')
-    FactoryGirl.create(:redirect_rule_regex, :destination => '/news', :source => 'categoryID=12345')
+    create(:redirect_rule, :destination => '/news/5', :source => '/my_custom_url')
+    create(:redirect_rule_regex, :destination => '/news/$1', :source => '/my_custom_url/([A-Za-z0-9_]+)')
+    create(:redirect_rule_regex, :destination => '/news', :source => 'categoryID=12345')
   end
 
   it 'correctly redirects the visitor for an exact match rule' do
@@ -61,7 +61,7 @@ describe 'Redirector middleware', :type => :feature do
   end
 
   it 'handles invalid URIs properly' do
-    bad_rule = FactoryGirl.create(:redirect_rule_regex, :destination => 'http://www.example.com$1', :source => '^/custom(.*)$')
+    bad_rule = create(:redirect_rule_regex, :destination => 'http://www.example.com$1', :source => '^/custom(.*)$')
 
     begin
       visit '/custom)%e2'
