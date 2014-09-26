@@ -64,9 +64,9 @@ describe 'Redirector middleware', :type => :feature do
     bad_rule = create(:redirect_rule_regex, :destination => 'http://www.example.com$1', :source => '^/custom(.*)$')
 
     begin
-      visit '/custom)%e2'
+      visit '/custom)e2'
     rescue Redirector::RuleError => e
-      e.message.should == "RedirectRule #{bad_rule.id} generated the bad destination: http://www.example.com)%e2"
+      e.message.should == "RedirectRule #{bad_rule.id} generated the bad destination: http://www.example.com)e2"
     end
   end
 end
