@@ -32,3 +32,6 @@
 
 == 1.0.0 / 2014-03-07
 * Add `preserve_query` option to preserve the query string from source to destination URL
+
+== 1.0.1 / 2014-09-26
+* Fix case sensitive/insensitive matching for non-regex rules
