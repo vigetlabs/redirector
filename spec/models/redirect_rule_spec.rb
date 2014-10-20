@@ -32,6 +32,15 @@ describe RedirectRule do
     new_rule.errors_on(:source).should == ['is an invalid regular expression']
   end
 
+  describe 'strip_source_whitespace before_save callback' do
+    it 'strips leading and trailing whitespace when saved' do
+      subject = FactoryGirl.build(:redirect_rule, :source => ' /needs-stripping ')
+
+      subject.save
+      subject.reload.source.should == '/needs-stripping'
+    end
+  end
+
   describe '.match_for' do
     it 'returns nil if there is no matching rule' do
       RedirectRule.match_for('/someplace', {}).should be_nil
