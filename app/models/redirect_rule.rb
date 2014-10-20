@@ -16,6 +16,8 @@ class RedirectRule < ActiveRecord::Base
   validates :source, :destination, :presence => true
   validates :active, :inclusion => { :in => ['0', '1', true, false] }
 
+  before_save :strip_source_whitespace
+
   def self.regex_expression
     if connection_mysql?
       '(redirect_rules.source_is_case_sensitive = :true AND :source REGEXP BINARY redirect_rules.source) OR '+
@@ -70,6 +72,10 @@ class RedirectRule < ActiveRecord::Base
 
   def self.connection_mysql?
     connection.adapter_name.downcase.include?('mysql')
+  end
+
+  def strip_source_whitespace
+    self.source = self.source.strip
   end
 
 end
