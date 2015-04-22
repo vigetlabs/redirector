@@ -49,3 +49,5 @@ matrix:
       gemfile: gemfiles/rails_40.gemfile
     - rvm: 2.2.2
       gemfile: gemfiles/rails_40.gemfile
+notifications:
+  slack: viget:g9nhMe2ZIu0p49xgfNQSfWxA
