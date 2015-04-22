@@ -33,9 +33,9 @@ describe 'Redirector middleware', :type => :feature do
   it 'should preserve the query string if the Redirector.preserve_query is true' do
     original_option = Redirector.preserve_query
     Redirector.preserve_query = true
-    visit '/my_custom_url/20?categoryID=12345'
+    visit '/my_custom_url/20?categoryID=43257'
     uri = URI.parse(current_url)
-    uri.query.should == 'categoryID=12345'
+    uri.query.should == 'categoryID=43257'
     current_path.should == '/news/20'
     Redirector.preserve_query = original_option
   end
