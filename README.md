@@ -105,3 +105,11 @@ If you require support for another database, the only thing that needs to be add
 ## Copyright
 
 Copyright (c) 2012 Brian Landau (Viget). See MIT_LICENSE for further details.
+
+***
+
+<a href="http://code.viget.com">
+  <img src="http://code.viget.com/github-banner.png" alt="Code At Viget">
+</a>
+
+Visit [code.viget.com](http://code.viget.com) to see more projects from [Viget.](https://viget.com)
