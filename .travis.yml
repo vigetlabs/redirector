@@ -23,6 +23,8 @@ gemfile:
 env:
   - DB=mysql
   - DB=postgresql
+before_install:
+  - gem update bundler
 before_script:
   - mysql -e 'create database redirector_dummy_test; create database redirector_dummy_development;'
   - psql -c 'create database redirector_dummy_test' -U postgres
