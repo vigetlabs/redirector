@@ -23,6 +23,7 @@ gemfile:
 env:
   - DB=mysql
   - DB=postgresql
+  - DB=sqlite
 before_install:
   - gem update bundler
 before_script:
