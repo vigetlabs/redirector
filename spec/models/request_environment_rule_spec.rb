@@ -21,25 +21,27 @@ describe RequestEnvironmentRule do
 
   it 'should not allow an invalid regex' do
     rule = build(:request_environment_rule_regex, :environment_value => '[')
-    rule.errors_on(:environment_value).should == ['is an invalid regular expression']
+
+    rule.should_not be_valid
+    expect(rule.errors.added?(:environment_value, 'is an invalid regular expression')).to be_truthy
   end
 
   it "should know if it's matched for a non-regex value" do
-    subject.matches?({'SERVER_NAME' => 'example.com'}).should be_true
-    subject.matches?({'HTTP_HOST' => 'www.example.com'}).should be_false
-    subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_false
+    subject.matches?({'SERVER_NAME' => 'example.com'}).should be_truthy
+    subject.matches?({'HTTP_HOST' => 'www.example.com'}).should be_falsey
+    subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_falsey
   end
 
   context 'with a case sensitive regex value' do
     subject { create(:request_environment_rule_regex) }
 
     it "should know if it's matched" do
-      subject.matches?({'QUERY_STRING' => 'something=value'}).should be_true
-      subject.matches?({'QUERY_STRING' => 'q=search&something=value'}).should be_true
-      subject.matches?({'QUERY_STRING' => 'q=search&something=VALUE'}).should be_false
-      subject.matches?({'QUERY_STRING' => 'q=search&something=bogus'}).should be_false
-      subject.matches?({'QUERY_STRING' => 'q=search'}).should be_false
-      subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_false
+      subject.matches?({'QUERY_STRING' => 'something=value'}).should be_truthy
+      subject.matches?({'QUERY_STRING' => 'q=search&something=value'}).should be_truthy
+      subject.matches?({'QUERY_STRING' => 'q=search&something=VALUE'}).should be_falsey
+      subject.matches?({'QUERY_STRING' => 'q=search&something=bogus'}).should be_falsey
+      subject.matches?({'QUERY_STRING' => 'q=search'}).should be_falsey
+      subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_falsey
     end
   end
 
@@ -47,12 +49,12 @@ describe RequestEnvironmentRule do
     subject { create(:request_environment_rule_regex, :environment_value_is_case_sensitive => false) }
 
     it "should know if it's matched" do
-      subject.matches?({'QUERY_STRING' => 'something=value'}).should be_true
-      subject.matches?({'QUERY_STRING' => 'q=search&something=value'}).should be_true
-      subject.matches?({'QUERY_STRING' => 'q=search&something=VALUE'}).should be_true
-      subject.matches?({'QUERY_STRING' => 'q=search&something=bogus'}).should be_false
-      subject.matches?({'QUERY_STRING' => 'q=search'}).should be_false
-      subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_false
+      subject.matches?({'QUERY_STRING' => 'something=value'}).should be_truthy
+      subject.matches?({'QUERY_STRING' => 'q=search&something=value'}).should be_truthy
+      subject.matches?({'QUERY_STRING' => 'q=search&something=VALUE'}).should be_truthy
+      subject.matches?({'QUERY_STRING' => 'q=search&something=bogus'}).should be_falsey
+      subject.matches?({'QUERY_STRING' => 'q=search'}).should be_falsey
+      subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_falsey
     end
   end
 end
