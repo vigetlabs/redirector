@@ -14,7 +14,11 @@ class RedirectRule < ActiveRecord::Base
   accepts_nested_attributes_for :request_environment_rules, :allow_destroy => true, :reject_if => :all_blank
 
   validates :source, :destination, :presence => true
-  validates :active, :inclusion => { :in => ['0', '1', true, false] }
+
+  # Not working with rails 5.0.1
+  if Rails.version.to_i < 5
+    validates :active, :inclusion => { :in => ['0', '1', true, false] }
+  end
 
   before_save :strip_source_whitespace
 

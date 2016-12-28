@@ -39,7 +39,7 @@ describe RedirectRule do
 
   describe 'strip_source_whitespace before_save callback' do
     it 'strips leading and trailing whitespace when saved' do
-      subject = FactoryBot.build(:redirect_rule, :source => ' /needs-stripping ')
+      subject = build(:redirect_rule, :source => ' /needs-stripping ')
 
       subject.save
       expect(subject.reload.source).to eq('/needs-stripping')

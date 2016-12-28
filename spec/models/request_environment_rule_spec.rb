@@ -21,14 +21,15 @@ describe RequestEnvironmentRule do
 
   it 'should not allow an invalid regex' do
     rule = build(:request_environment_rule_regex, :environment_value => '[')
+
     rule.validate
     expect(rule.errors[:environment_value]).to eq(['is an invalid regular expression'])
   end
 
   it "should know if it's matched for a non-regex value" do
-    expect(subject.matches?({'SERVER_NAME' => 'example.com'})).to be_truthy
-    expect(subject.matches?({'HTTP_HOST' => 'www.example.com'})).to be_falsey
-    expect(subject.matches?({'SERVER_NAME' => 'example.ca'})).to be_falsey
+    subject.matches?({'SERVER_NAME' => 'example.com'}).should be_truthy
+    subject.matches?({'HTTP_HOST' => 'www.example.com'}).should be_falsey
+    subject.matches?({'SERVER_NAME' => 'example.ca'}).should be_falsey
   end
 
   context 'with a case sensitive regex value' do
