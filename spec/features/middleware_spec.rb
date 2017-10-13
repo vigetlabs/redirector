@@ -60,6 +60,16 @@ describe 'Redirector middleware', :type => :feature do
     current_url.should == 'http://example.com:3000/news/5'
   end
 
+  it 'foregoes search if ignored path pattern is detected' do
+    original_option = Redirector.ignored_patterns
+    Redirector.ignored_patterns = [/^\/my_custom_url\/.+/]
+
+    visit '/my_custom_url/20'
+    current_path.should == '/my_custom_url/20'
+
+    Redirector.ignored_patterns = original_option
+  end
+
   unless Rails.version =~ /\A4\.2\.\d\z/
     it 'handles invalid URIs properly' do
       bad_rule = create(:redirect_rule_regex, :destination => 'http://www.example.com$1', :source => '^/custom(.*)$')

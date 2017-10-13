@@ -29,7 +29,7 @@ module Redirector
       private
 
       def redirect?
-        matched_destination.present?
+        !ignore_path? && matched_destination.present?
       end
 
       def matched_destination
@@ -46,8 +46,14 @@ module Redirector
         end
       end
 
+      def ignore_path?
+        Redirector.ignored_patterns.any? do |pattern|
+          request_path.match pattern
+        end
+      end
+
       def request_path
-        if Redirector.include_query_in_source
+        @request_path ||= if Redirector.include_query_in_source
           env['ORIGINAL_FULLPATH']
         else
           env['PATH_INFO']

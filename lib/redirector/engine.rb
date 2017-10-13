@@ -10,6 +10,7 @@ module Redirector
       Redirector.include_query_in_source = app.config.redirector.include_query_in_source || false
       Redirector.preserve_query          = app.config.redirector.preserve_query || false
       Redirector.silence_sql_logs        = app.config.redirector.silence_sql_logs || false
+      Redirector.ignored_patterns        = app.config.redirector.ignored_patterns || []
     end
   end
 end
