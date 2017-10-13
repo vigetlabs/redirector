@@ -14,13 +14,20 @@ class RedirectRule < ActiveRecord::Base
   accepts_nested_attributes_for :request_environment_rules, :allow_destroy => true, :reject_if => :all_blank
 
   validates :source, :destination, :presence => true
-  validates :active, :inclusion => { :in => ['0', '1', true, false] }
+
+  # Not working with rails 5.0.1
+  if Rails.version.to_i < 5
+    validates :active, :inclusion => { :in => ['0', '1', true, false] }
+  end
 
   before_save :strip_source_whitespace
 
   def self.regex_expression
     if connection_mysql?
       '(redirect_rules.source_is_case_sensitive = :true AND :source REGEXP BINARY redirect_rules.source) OR '+
+      '(redirect_rules.source_is_case_sensitive = :false AND :source REGEXP redirect_rules.source)'
+    elsif connection_sqlite?
+      '(redirect_rules.source_is_case_sensitive = :true AND :source REGEXP redirect_rules.source COLLATE BINARY) OR '+
       '(redirect_rules.source_is_case_sensitive = :false AND :source REGEXP redirect_rules.source)'
     else
       '(redirect_rules.source_is_case_sensitive = :true AND :source ~ redirect_rules.source) OR '+
@@ -32,7 +39,7 @@ class RedirectRule < ActiveRecord::Base
     <<-SQL
       redirect_rules.active = :true AND
       ((source_is_regex = :false AND source_is_case_sensitive = :false AND LOWER(redirect_rules.source) = LOWER(:source)) OR
-      (source_is_regex = :false AND source_is_case_sensitive = :true AND #{'BINARY' if connection_mysql?} redirect_rules.source = :source) OR
+      (source_is_regex = :false AND source_is_case_sensitive = :true AND #{'BINARY' if connection_mysql?} redirect_rules.source = :source #{'COLLATE BINARY' if connection_sqlite?}) OR
       (source_is_regex = :true AND (#{regex_expression})))
     SQL
   end
@@ -72,6 +79,10 @@ class RedirectRule < ActiveRecord::Base
 
   def self.connection_mysql?
     connection.adapter_name.downcase.include?('mysql')
+  end
+
+  def self.connection_sqlite?
+    connection.adapter_name.downcase.include?('sqlite')
   end
 
   def strip_source_whitespace

@@ -6,7 +6,6 @@ Coveralls.wear! 'rails'
 
 require File.expand_path("../dummy/config/environment.rb",  __FILE__)
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'shoulda-matchers'
 require 'capybara/rails'
 require 'capybara/rspec'
@@ -25,7 +24,7 @@ RSpec.configure do |config|
   config.infer_base_class_for_anonymous_controllers = false
 
   config.after(:each, :type => :feature) do
-    DatabaseCleaner.clean       # Truncate the database
+    DatabaseCleaner.clean_with :truncation, except: %w(ar_internal_metadata)
     Capybara.reset_sessions!    # Forget the (simulated) browser state
     Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
   end

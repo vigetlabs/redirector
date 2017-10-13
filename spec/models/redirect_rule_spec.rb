@@ -27,14 +27,16 @@ describe RedirectRule do
   it { should allow_value(false).for(:source_is_case_sensitive) }
 
   it 'should not allow an invalid regex' do
-    new_rule = RedirectRule.new(:source => '[', :source_is_regex => true,
+    new_rule = build(:redirect_rule, :source => '[', :source_is_regex => true,
       :destination => 'http://www.example.com', :active => true)
-    new_rule.errors_on(:source).should == ['is an invalid regular expression']
+
+    new_rule.should_not be_valid
+    expect(new_rule.errors.added?(:source, 'is an invalid regular expression')).to be_truthy
   end
 
   describe 'strip_source_whitespace before_save callback' do
     it 'strips leading and trailing whitespace when saved' do
-      subject = FactoryGirl.build(:redirect_rule, :source => ' /needs-stripping ')
+      subject = build(:redirect_rule, :source => ' /needs-stripping ')
 
       subject.save
       subject.reload.source.should == '/needs-stripping'
