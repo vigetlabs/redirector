@@ -26,6 +26,8 @@ Redirector is a Rails engine that adds a piece of middleware to the top of your 
 
 `preserve_query`: Pass the query string parameters through from the source to the target URL.
 
+`ignored_patterns`: Lets you define an array of regex patterns which will be ignored when searching for redirect records. ie: `[/^\/assets\/.+/]` will bypass a database lookup for any path that starts with `/assets/`. This can be useful in preventing numerous unnecessary lookups.
+
 You can set these inside your configuration in `config/application.rb` of your Rails application like so:
 
 ```ruby
@@ -35,6 +37,7 @@ module MyApplication
 
     config.redirector.include_query_in_source = true
     config.redirector.silence_sql_logs = true
+    config.redirector.ignored_patterns = [/^\/assets\/.+/]
   end
 end
 ```
