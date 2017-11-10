@@ -4,5 +4,6 @@ source "http://rubygems.org"
 
 gem "jquery-rails"
 gem "rails", "~> 3.2.21"
+gem 'test-unit', '~> 3.0'
 
 gemspec :path => "../"
