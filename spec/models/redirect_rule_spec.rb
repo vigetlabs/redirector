@@ -29,7 +29,8 @@ describe RedirectRule do
   it 'should not allow an invalid regex' do
     new_rule = RedirectRule.new(:source => '[', :source_is_regex => true,
       :destination => 'http://www.example.com', :active => true)
-    new_rule.errors_on(:source).should == ['is an invalid regular expression']
+    new_rule.valid?
+    expect(new_rule.errors.messages[:source]).to eq(['is an invalid regular expression'])
   end
 
   describe 'strip_source_whitespace before_save callback' do
@@ -37,28 +38,28 @@ describe RedirectRule do
       subject = FactoryGirl.build(:redirect_rule, :source => ' /needs-stripping ')
 
       subject.save
-      subject.reload.source.should == '/needs-stripping'
+      expect(subject.reload.source).to eq('/needs-stripping')
     end
   end
 
   describe '.match_for' do
     it 'returns nil if there is no matching rule' do
-      RedirectRule.match_for('/someplace', {}).should be_nil
+      expect(RedirectRule.match_for('/someplace', {})).to be_nil
     end
 
     it 'returns the rule if there is a matching rule' do
-      RedirectRule.match_for('/catchy_thingy', {}).should == subject
+      expect(RedirectRule.match_for('/catchy_thingy', {})).to eq(subject)
     end
 
     context 'for a case sensitive match' do
       let!(:case_sensitive_rule) { create(:redirect_rule, :source_is_case_sensitive => true, :source => '/Case-Does-Matter') }
 
       it 'returns the rule if it matches the case' do
-        RedirectRule.match_for('/Case-Does-Matter', {}).should == case_sensitive_rule
+        expect(RedirectRule.match_for('/Case-Does-Matter', {})).to eq(case_sensitive_rule)
       end
 
       it 'returns nil if it does not match the case' do
-        RedirectRule.match_for('/case-does-matter', {}).should be_nil
+        expect(RedirectRule.match_for('/case-does-matter', {})).to be_nil
       end
     end
 
@@ -66,11 +67,11 @@ describe RedirectRule do
       let!(:case_insensitive_rule) { create(:redirect_rule, :source_is_case_sensitive => false, :source => '/Case-Does-Not-Matter') }
 
       it 'returns the rule if it matches the case' do
-        RedirectRule.match_for('/Case-Does-Not-Matter', {}).should == case_insensitive_rule
+        expect(RedirectRule.match_for('/Case-Does-Not-Matter', {})).to eq(case_insensitive_rule)
       end
 
       it 'returns the rule if it does not match the case' do
-        RedirectRule.match_for('/case-does-not-matter', {}).should == case_insensitive_rule
+        expect(RedirectRule.match_for('/case-does-not-matter', {})).to eq(case_insensitive_rule)
       end
     end
 
@@ -78,11 +79,11 @@ describe RedirectRule do
       let!(:regex_rule){ create(:redirect_rule_regex, :source_is_case_sensitive => true) }
 
       it 'returns the rule if it matches the case' do
-        RedirectRule.match_for('/new_shiny/from_company', {}).should == regex_rule
+        expect(RedirectRule.match_for('/new_shiny/from_company', {})).to eq(regex_rule)
       end
 
       it 'returns nil if it does not match the case' do
-        RedirectRule.match_for('/new_SHINY/from_company', {}).should be_nil
+        expect(RedirectRule.match_for('/new_SHINY/from_company', {})).to be_nil
       end
     end
 
@@ -90,11 +91,11 @@ describe RedirectRule do
       let!(:regex_rule){ create(:redirect_rule_regex) }
 
       it 'returns the rule if it matches the case' do
-        RedirectRule.match_for('/new_shiny/from_company', {}).should == regex_rule
+        expect(RedirectRule.match_for('/new_shiny/from_company', {})).to eq(regex_rule)
       end
 
       it 'returns the rule if it does not match the case' do
-        RedirectRule.match_for('/new_SHINY/from_company', {}).should == regex_rule
+        expect(RedirectRule.match_for('/new_SHINY/from_company', {})).to eq(regex_rule)
       end
     end
 
@@ -104,11 +105,11 @@ describe RedirectRule do
       end
 
       it 'should find the rule if it matches' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com'}).should == subject
+        expect(RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com'})).to eq(subject)
       end
 
       it 'should not find the rule if there is no match' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.ca'}).should be_nil
+        expect(RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.ca'})).to be_nil
       end
     end
 
@@ -119,13 +120,13 @@ describe RedirectRule do
       end
 
       it 'should find the rule if it matches' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
-          'QUERY_STRING' => 's=bogus&something=value'}).should == subject
+        expect(RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
+          'QUERY_STRING' => 's=bogus&something=value'})).to eq(subject)
       end
 
       it 'should not find the rule if there is no match' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
-          "QUERY_STRING" => 's=bogus&something=wrong'}).should be_nil
+        expect(RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
+          "QUERY_STRING" => 's=bogus&something=wrong'})).to be_nil
       end
     end
 
@@ -140,18 +141,18 @@ describe RedirectRule do
       end
 
       it 'should find the rule if it matches' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
-          'QUERY_STRING' => 's=bogus&something=value'}).should == subject
+        expect(RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
+          'QUERY_STRING' => 's=bogus&something=value'})).to eq(subject)
       end
 
       it 'should find the other rule if it matches' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
-          'QUERY_STRING' => 's=bogus&another=value'}).should == rule2
+        expect(RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
+          'QUERY_STRING' => 's=bogus&another=value'})).to eq(rule2)
       end
 
       it 'should not find the rule if there is no match' do
-        RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
-          "QUERY_STRING" => 's=bogus&something=wrong'}).should be_nil
+        expect(RedirectRule.match_for('/catchy_thingy', {'SERVER_NAME' => 'example.com',
+          "QUERY_STRING" => 's=bogus&something=wrong'})).to be_nil
       end
     end
 
@@ -159,7 +160,7 @@ describe RedirectRule do
       let!(:regex_rule){ create(:redirect_rule_regex, :source => '[A-Za-z0-9]_thingy') }
 
       it 'should return the exact match' do
-        RedirectRule.match_for('/catchy_thingy', {}).should == subject
+        expect(RedirectRule.match_for('/catchy_thingy', {})).to eq(subject)
       end
     end
   end
@@ -168,15 +169,15 @@ describe RedirectRule do
     let!(:regex_rule) { create(:redirect_rule_regex) }
 
     it 'should find a regex match' do
-      RedirectRule.destination_for('/new_shiny/from_company', {}).should == 'http://www.example.com/news/from_company'
+      expect(RedirectRule.destination_for('/new_shiny/from_company', {})).to eq('http://www.example.com/news/from_company')
     end
 
     it 'should find a string match' do
-      RedirectRule.destination_for('/catchy_thingy', {}).should == 'http://www.example.com/products/1'
+      expect(RedirectRule.destination_for('/catchy_thingy', {})).to eq('http://www.example.com/products/1')
     end
 
     it 'should return nil if there is no matching rule' do
-      RedirectRule.destination_for('/someplace', {}).should be_nil
+      expect(RedirectRule.destination_for('/someplace', {})).to be_nil
     end
   end
 
@@ -184,11 +185,11 @@ describe RedirectRule do
     let(:regex_rule) { create(:redirect_rule_regex) }
 
     it 'returns the destination for a non regex rule' do
-      subject.evaluated_destination_for('/catchy_thingy').should == 'http://www.example.com/products/1'
+      expect(subject.evaluated_destination_for('/catchy_thingy')).to eq('http://www.example.com/products/1')
     end
 
     it 'returns the evaluated destination for a regex rule' do
-      regex_rule.evaluated_destination_for('/new_shiny/from_company').should == 'http://www.example.com/news/from_company'
+      expect(regex_rule.evaluated_destination_for('/new_shiny/from_company')).to eq('http://www.example.com/news/from_company')
     end
   end
 end
