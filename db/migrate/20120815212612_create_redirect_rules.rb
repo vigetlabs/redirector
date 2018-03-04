@@ -1,4 +1,4 @@
-class CreateRedirectRules < ActiveRecord::Migration
+class CreateRedirectRules < ActiveRecord::Migration[4.2]
   def change
     create_table :redirect_rules do |t|
       t.string :source, :null => false
