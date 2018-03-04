@@ -72,10 +72,13 @@ describe 'Redirector middleware', :type => :feature do
 
   unless Rails.version =~ /\A4\.2\.\d\z/
     it 'handles invalid URIs properly' do
-      bad_rule = create(:redirect_rule_regex, :destination => 'http://www.example.com$1', :source => '^/custom(.*)$')
+      bad_rule = create(:redirect_rule_regex,
+        :destination => 'http://www.example.com/invalid)e2',
+        :source => '^/custom(.*)$',
+      )
 
       begin
-        visit '/custom)e2'
+        visit '/custome2'
       rescue Redirector::RuleError => e
         expect(e.message).to eq("RedirectRule #{bad_rule.id} generated the bad destination: http://www.example.com)e2")
       end
