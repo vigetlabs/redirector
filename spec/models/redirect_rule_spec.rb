@@ -27,8 +27,13 @@ describe RedirectRule do
   it { is_expected.to allow_value(false).for(:source_is_case_sensitive) }
 
   it 'should not allow an invalid regex' do
-    new_rule = RedirectRule.new(:source => '[', :source_is_regex => true,
-      :destination => 'http://www.example.com', :active => true)
+    new_rule = RedirectRule.new(
+      :source => '[',
+      :source_is_regex => true,
+      :destination => 'http://www.example.com',
+      :active => true
+    )
+    new_rule.validate
     expect(new_rule.errors[:source]).to eq(['is an invalid regular expression'])
   end
 

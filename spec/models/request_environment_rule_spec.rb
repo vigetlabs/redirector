@@ -21,6 +21,7 @@ describe RequestEnvironmentRule do
 
   it 'should not allow an invalid regex' do
     rule = build(:request_environment_rule_regex, :environment_value => '[')
+    rule.validate
     expect(rule.errors[:environment_value]).to eq(['is an invalid regular expression'])
   end
 
