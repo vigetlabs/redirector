@@ -11,14 +11,15 @@ require 'shoulda-matchers'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'database_cleaner'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
+require 'pry'
 
 Rails.backtrace_cleaner.remove_silencers!
 
 DatabaseCleaner.strategy = :truncation
 
 RSpec.configure do |config|
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
 
   config.mock_with :rspec
   config.use_transactional_fixtures = true
