@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "mysql2"
   s.add_development_dependency "pg"
-  s.add_development_dependency 'rspec-rails', '~> 2.14.2'
+  s.add_development_dependency 'rspec-rails', '~> 3.7'
   s.add_development_dependency 'shoulda-matchers'
   s.add_development_dependency 'capybara', '~> 2.2'
   s.add_development_dependency 'database_cleaner'
