@@ -1,11 +1,11 @@
-# Read about factories at https://github.com/thoughtbot/factory_girl
+# Read about factories at https://github.com/thoughtbot/factory_bot
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :request_environment_rule do
     redirect_rule
     environment_key_name "SERVER_NAME"
     environment_value "example.com"
-    
+
     factory :request_environment_rule_regex do
       environment_key_name "QUERY_STRING"
       environment_value "something=value"
