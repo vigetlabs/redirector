@@ -60,6 +60,13 @@ describe 'Redirector middleware', :type => :feature do
     expect(current_url).to eq('http://example.com:3000/news/5')
   end
 
+  it 'handles https requests' do
+    Capybara.app_host = 'https://example.com'
+
+    visit '/my_custom_url'
+    expect(current_url).to eq('https://example.com/news/5')
+  end
+
   it 'foregoes search if ignored path pattern is detected' do
     original_option = Redirector.ignored_patterns
     Redirector.ignored_patterns = [/^\/my_custom_url\/.+/]

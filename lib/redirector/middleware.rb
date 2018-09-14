@@ -64,6 +64,10 @@ module Redirector
         env['HTTP_HOST'].split(':').first
       end
 
+      def request_scheme
+        env['rack.url_scheme']
+      end
+
       def request_port
         @request_port ||= begin
           if env['HTTP_HOST'].include?(':')
@@ -86,7 +90,7 @@ module Redirector
 
       def redirect_uri
         destination_uri.tap do |uri|
-          uri.scheme ||= 'http'
+          uri.scheme ||= request_scheme
           uri.host   ||= request_host
           uri.port   ||= request_port if request_port.present?
           uri.query  ||= env['QUERY_STRING'] if Redirector.preserve_query
