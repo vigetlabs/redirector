@@ -3,6 +3,7 @@
 source "http://rubygems.org"
 
 gem "jquery-rails"
+gem "pry"
 gem "rails", "~> 5.1.5"
 
 gemspec path: "../"
