@@ -93,7 +93,7 @@ module Redirector
           uri.scheme ||= request_scheme
           uri.host   ||= request_host
           uri.port   ||= request_port if request_port.present?
-          uri.query  ||= env['QUERY_STRING'] if Redirector.preserve_query
+          uri.query  ||= env['QUERY_STRING'] if Redirector.preserve_query && env['QUERY_STRING'].present?
         end
       end
 
