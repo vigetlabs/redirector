@@ -20,7 +20,7 @@ class RedirectRule < ActiveRecord::Base
     validates :active, :inclusion => { :in => ['0', '1', true, false] }
   end
 
-  before_save :strip_source_whitespace
+  before_save :strip_source_whitespace, :strip_destination_whitespace
 
   def self.regex_expression
     if connection_mysql?
@@ -87,6 +87,10 @@ class RedirectRule < ActiveRecord::Base
 
   def strip_source_whitespace
     self.source = self.source.strip
+  end
+
+  def strip_destination_whitespace
+    self.destination = self.destination.strip
   end
 
 end

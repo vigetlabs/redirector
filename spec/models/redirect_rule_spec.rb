@@ -46,6 +46,15 @@ describe RedirectRule do
     end
   end
 
+  describe 'strip_destination_whitespace before_save callback' do
+    it 'strips leading and trailing whitespace when saved' do
+      subject = build(:redirect_rule, :destination => ' /needs-stripping ')
+
+      subject.save
+      expect(subject.reload.destination).to eq('/needs-stripping')
+    end
+  end
+
   describe '.match_for' do
     it 'returns nil if there is no matching rule' do
       expect(RedirectRule.match_for('/someplace', {})).to be_nil
