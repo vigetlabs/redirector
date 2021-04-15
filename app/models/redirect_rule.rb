@@ -24,7 +24,7 @@ class RedirectRule < ActiveRecord::Base
 
   def self.regex_expression
     if connection_mysql?
-      '(redirect_rules.source_is_case_sensitive = :true AND :source REGEXP BINARY redirect_rules.source) OR '+
+      '(redirect_rules.source_is_case_sensitive = :true AND CAST(:source AS BINARY) REGEXP BINARY redirect_rules.source) OR '+
       '(redirect_rules.source_is_case_sensitive = :false AND :source REGEXP redirect_rules.source)'
     elsif connection_sqlite?
       '(redirect_rules.source_is_case_sensitive = :true AND :source REGEXP redirect_rules.source COLLATE BINARY) OR '+
